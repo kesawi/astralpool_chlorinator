@@ -4,56 +4,43 @@
 [![GitHub Activity][commits-shield]][commits]
 [![License][license-shield]](LICENSE)
 
-[![pre-commit][pre-commit-shield]][pre-commit]
-[![Black][black-shield]][black]
-
 [![hacs][hacsbadge]][hacs]
 [![Project Maintenance][maintenance-shield]][user_profile]
 
 [![Community Forum][forum-shield]][forum]
 
-[![BuyMeCoffee][buymecoffeebadge]][buymecoffee]
+## About
 
-\**This component will set up the following platforms.**
+This is a fork of [@pbutterworth](https://github.com/pbutterworth)'s [astralpool_chlorinator](https://github.com/pbutterworth/astralpool_chlorinator) integration. It uses my forked [pychlorinator](https://github.com/kesawi/pychlorinator) library. Full credit to pbutterworth for the original work and protocol reverse engineering.
+
+## Platforms
 
 | Platform        | Description                                                               |
 | --------------- | ------------------------------------------------------------------------- |
-| `binary_sensor` | Show something `True` or `False`.                                         |
-| `sensor`        | Show info from Astral Pool Viron eQuilibrium Chlorinator API.             |
-| `select`        | Control the chlorinator mode (off/auto/manual), pump speed, and default manual speed. |
-| `number`        | Set pH setpoint, chlorine output level (0-8 manual / ORP mV automatic), and acid dosing inhibit period. |
+| `binary_sensor` | Pump running, cell running, pump priming, chemistry values valid/current, sanitising status. |
+| `sensor`        | pH, pH setpoint, ORP setpoint, mode, pump speed, chlorine status, info message, pH/ORP control type, cell running time, cell reversal count, low salt cell running time, previous day cell load, acid dosing inhibit status and time remaining, highest/lowest pH and ORP measured. |
+| `select`        | Control chlorinator mode (off/auto/manual), pump speed, and default manual speed. |
+| `number`        | Set pH setpoint, chlorine output level (0-8 manual / ORP mV automatic), and acid dosing inhibit period (0-1440 min). |
 | `button`        | Dismiss info message, disable/re-enable acid dosing, reset statistics, trigger cell reversal. |
 
+## Requirements
 
-## Installation
+- A Bluetooth proxy (e.g. ESP32 running ESPHome bluetooth_proxy) within range of the chlorinator
+- Home Assistant with HACS installed
 
-1. Using the tool of choice open the directory (folder) for your HA configuration (where you find `configuration.yaml`).
-2. If you do not have a `custom_components` directory (folder) there, you need to create it.
-3. In the `custom_components` directory (folder) create a new folder called `astralpool_chlorinator`.
-4. Download _all_ the files from the `custom_components/astralpool_chlorinator/` directory (folder) in this repository.
-5. Place the files you downloaded in the new directory (folder) you created.
-6. Restart Home Assistant
-7. Wait paitently for your chlorinator to be discovered (should only be a few seconds once HA has started up)
+## Installation via HACS
 
-Using your HA configuration directory (folder) as a starting point you should now also have this:
+1. In HACS, go to **Integrations → Custom Repositories**
+2. Add `https://github.com/kesawi/astralpool_chlorinator` as an **Integration**
+3. Install **Astral Pool Viron eQuilibrium Chlorinator**
+4. Restart Home Assistant
+5. The chlorinator will be auto-discovered via Bluetooth
 
-```text
-custom_components/astralpool_chlorinator/translations/en.json
-custom_components/astralpool_chlorinator/translations/fr.json
-custom_components/astralpool_chlorinator/translations/nb.json
-custom_components/astralpool_chlorinator/translations/sensor.en.json
-custom_components/astralpool_chlorinator/translations/sensor.fr.json
-custom_components/astralpool_chlorinator/translations/sensor.nb.json
-custom_components/astralpool_chlorinator/translations/sensor.nb.json
-custom_components/astralpool_chlorinator/__init__.py
-custom_components/astralpool_chlorinator/api.py
-custom_components/astralpool_chlorinator/binary_sensor.py
-custom_components/astralpool_chlorinator/config_flow.py
-custom_components/astralpool_chlorinator/const.py
-custom_components/astralpool_chlorinator/manifest.json
-custom_components/astralpool_chlorinator/sensor.py
-custom_components/astralpool_chlorinator/switch.py
-```
+## Access Token
+
+The access token is the 4-digit Bluetooth access code found on the chlorinator's Bluetooth install screen:
+- On the chlorinator front panel, navigate to **Install → Bluetooth Install**
+- The 4-digit code will be displayed
 
 ## Configuration is done in the UI
 
@@ -64,29 +51,35 @@ After installation, the poll interval can be configured via:
 | ------- | ----------- | ------- | ----- |
 | Poll Interval (seconds) | How frequently the integration connects via Bluetooth to read device state. Setting too low may cause connection issues. | 60 | 10-300 |
 
+## Notes
+
+- ORP probe disconnection: if your ORP probe has ground loop issues, disconnect it and set the chlorine output to manual (0–8 scale) via the Chlorine Output number entity
+- Acid dosing re-enable: sending DisableAcidDosingForPeriod with period=0 is used as the cancel mechanism — verify this works with your specific unit
+- BLE connection lock prevents concurrent read/write operations
+- Cell running time sensors are reported in hours
+- Time sync is not yet supported — potential future enhancement
+- Only tested on Viron EQ25
+
 ## Credits
 
-This project was generated from [@oncleben31](https://github.com/oncleben31)'s [Home Assistant Custom Component Cookiecutter](https://github.com/oncleben31/cookiecutter-homeassistant-custom-component) template.
+Originally developed by [@pbutterworth](https://github.com/pbutterworth). This is a fork maintained by [@kesawi](https://github.com/kesawi).
 
-Code template was mainly taken from [@Ludeeus](https://github.com/ludeeus)'s [integration_blueprint][integration_blueprint] template
+## Related
+
+- [@pbutterworth](https://github.com/pbutterworth)'s [astralpool_chlorinator](https://github.com/pbutterworth/astralpool_chlorinator) — original integration
+- [@pbutterworth](https://github.com/pbutterworth)'s [pychlorinator](https://github.com/pbutterworth/pychlorinator) — original BLE library
+- [@kesawi](https://github.com/kesawi)'s [pychlorinator](https://github.com/kesawi/pychlorinator) — forked BLE library used by this integration
 
 ---
 
-[integration_blueprint]: https://github.com/custom-components/integration_blueprint
-[black]: https://github.com/psf/black
-[black-shield]: https://img.shields.io/badge/code%20style-black-000000.svg?style=for-the-badge
-[commits-shield]: https://img.shields.io/github/commit-activity/y/pbutterworth/astralpool_chlorinator.svg?style=for-the-badge
-[commits]: https://github.com/pbutterworth/astralpool_chlorinator/commits/main
+[commits-shield]: https://img.shields.io/github/commit-activity/y/kesawi/astralpool_chlorinator.svg?style=for-the-badge
+[commits]: https://github.com/kesawi/astralpool_chlorinator/commits/main
 [hacs]: https://hacs.xyz
 [hacsbadge]: https://img.shields.io/badge/HACS-Custom-orange.svg?style=for-the-badge
 [forum-shield]: https://img.shields.io/badge/community-forum-brightgreen.svg?style=for-the-badge
 [forum]: https://community.home-assistant.io/
-[license-shield]: https://img.shields.io/github/license/pbutterworth/astralpool_chlorinator.svg?style=for-the-badge
-[maintenance-shield]: https://img.shields.io/badge/maintainer-%40pbutterworth-blue.svg?style=for-the-badge
-[pre-commit]: https://github.com/pre-commit/pre-commit
-[pre-commit-shield]: https://img.shields.io/badge/pre--commit-enabled-brightgreen?style=for-the-badge
-[releases-shield]: https://img.shields.io/github/release/pbutterworth/astralpool_chlorinator.svg?style=for-the-badge
-[releases]: https://github.com/pbutterworth/astralpool_chlorinator/releases
-[user_profile]: https://github.com/pbutterworth
-[buymecoffee]: https://www.buymeacoffee.com/pbutterworQ
-[buymecoffeebadge]: https://img.shields.io/badge/buy%20me%20a%20coffee-donate-yellow.svg?style=for-the-badge
+[license-shield]: https://img.shields.io/github/license/kesawi/astralpool_chlorinator.svg?style=for-the-badge
+[maintenance-shield]: https://img.shields.io/badge/maintainer-%40kesawi-blue.svg?style=for-the-badge
+[releases-shield]: https://img.shields.io/github/release/kesawi/astralpool_chlorinator.svg?style=for-the-badge
+[releases]: https://github.com/kesawi/astralpool_chlorinator/releases
+[user_profile]: https://github.com/kesawi

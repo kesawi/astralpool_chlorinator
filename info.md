@@ -7,27 +7,29 @@
 
 [![Community Forum][forum-shield]][forum]
 
-[![BuyMeCoffee][buymecoffeebadge]][buymecoffee]
-
 **This component will set up the following platforms.**
 
 | Platform        | Description                                                               |
 | --------------- | ------------------------------------------------------------------------- |
-| `binary_sensor` | Show something `True` or `False`.                                         |
-| `sensor`        | Show info from Astral Pool Viron eQuilibrium Chlorinator API.             |
-| `select`        | Control the chlorinator mode (off/auto/manual), pump speed, and default manual speed. |
-| `number`        | Set pH setpoint, chlorine output level (0-8 manual / ORP mV automatic), and acid dosing inhibit period. |
+| `binary_sensor` | Pump running, cell running, pump priming, chemistry values valid/current, sanitising status. |
+| `sensor`        | pH, pH setpoint, ORP setpoint, mode, pump speed, chlorine status, info message, pH/ORP control type, cell running time, cell reversal count, low salt cell running time, previous day cell load, acid dosing inhibit status and time remaining, highest/lowest pH and ORP measured. |
+| `select`        | Control chlorinator mode (off/auto/manual), pump speed, and default manual speed. |
+| `number`        | Set pH setpoint, chlorine output level (0-8 manual / ORP mV automatic), and acid dosing inhibit period (0-1440 min). |
 | `button`        | Dismiss info message, disable/re-enable acid dosing, reset statistics, trigger cell reversal. |
-
 
 {% if not installed %}
 
 ## Installation
 
 1. Click install.
-1. Home Assistant will now discover chlorinators in bluetooth range that are advertising the right BLE UUID
+2. Restart Home Assistant.
+3. Home Assistant will now discover chlorinators in Bluetooth range that are advertising the right BLE UUID.
 
 {% endif %}
+
+## Requirements
+
+A Bluetooth proxy (e.g. ESP32 running ESPHome bluetooth_proxy) within range of the chlorinator.
 
 ## Configuration is done in the UI
 
@@ -35,24 +37,19 @@ After installation, the poll interval can be configured via **Settings → Integ
 
 ## Credits
 
-This project was generated from [@oncleben31](https://github.com/oncleben31)'s [Home Assistant Custom Component Cookiecutter](https://github.com/oncleben31/cookiecutter-homeassistant-custom-component) template.
-
-Code template was mainly taken from [@Ludeeus](https://github.com/ludeeus)'s [integration_blueprint][integration_blueprint] template
+Originally developed by [@pbutterworth](https://github.com/pbutterworth). This is a fork maintained by [@kesawi](https://github.com/kesawi).
 
 ---
 
-[integration_blueprint]: https://github.com/custom-components/integration_blueprint
-[commits-shield]: https://img.shields.io/github/commit-activity/y/pbutterworth/astralpool_chlorinator.svg?style=for-the-badge
-[commits]: https://github.com/pbutterworth/astralpool_chlorinator/commits/main
+[commits-shield]: https://img.shields.io/github/commit-activity/y/kesawi/astralpool_chlorinator.svg?style=for-the-badge
+[commits]: https://github.com/kesawi/astralpool_chlorinator/commits/main
 [hacs]: https://hacs.xyz
 [hacsbadge]: https://img.shields.io/badge/HACS-Custom-orange.svg?style=for-the-badge
 [forum-shield]: https://img.shields.io/badge/community-forum-brightgreen.svg?style=for-the-badge
 [forum]: https://community.home-assistant.io/
-[license]: https://github.com/pbutterworth/astralpool_chlorinator/blob/main/LICENSE
-[license-shield]: https://img.shields.io/github/license/pbutterworth/astralpool_chlorinator.svg?style=for-the-badge
-[maintenance-shield]: https://img.shields.io/badge/maintainer-%40pbutterworth-blue.svg?style=for-the-badge
-[releases-shield]: https://img.shields.io/github/release/pbutterworth/astralpool_chlorinator.svg?style=for-the-badge
-[releases]: https://github.com/pbutterworth/astralpool_chlorinator/releases
-[user_profile]: https://github.com/pbutterworth
-[buymecoffee]: https://www.buymeacoffee.com/pbutterworQ
-[buymecoffeebadge]: https://img.shields.io/badge/buy%20me%20a%20coffee-donate-yellow.svg?style=for-the-badge
+[license]: https://github.com/kesawi/astralpool_chlorinator/blob/main/LICENSE
+[license-shield]: https://img.shields.io/github/license/kesawi/astralpool_chlorinator.svg?style=for-the-badge
+[maintenance-shield]: https://img.shields.io/badge/maintainer-%40kesawi-blue.svg?style=for-the-badge
+[releases-shield]: https://img.shields.io/github/release/kesawi/astralpool_chlorinator.svg?style=for-the-badge
+[releases]: https://github.com/kesawi/astralpool_chlorinator/releases
+[user_profile]: https://github.com/kesawi
